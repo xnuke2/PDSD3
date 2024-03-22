@@ -3,14 +3,16 @@
 #include <string>
 using std::string;
 
-struct Node {
-	int value;
-	Node* next;
-};
+
 
 class SetClass {
-	Node* firstNode;
 
+private: struct Node {
+		int value;
+		Node* next;
+	};
+	Node* firstNode;
+public:
 	//создание пустого множества
 	SetClass();
 	
@@ -24,7 +26,7 @@ class SetClass {
 	void setAddFirst(int num);
 
 	//создание случайного множества
-	SetClass(int length, int min, int max, string type);
+	static SetClass* createRandomSet(int length, int min, int max, string type);
 
 	//мощность множества
 	int powerOfSet();
@@ -36,20 +38,20 @@ class SetClass {
 	~SetClass();
 
 	//подмножество A-B
-	bool subSet(SetClass a);
+	bool subSet(SetClass* a);
 
 	//равенство двух множеств
-	bool equalitySet(SetClass a);
+	bool equalitySet(SetClass* a);
 
 	//объединение двух множеств
-	Node* CombiningSets(Node* a);
+	SetClass* CombiningSets(SetClass* a);
 
 	//пересечение двух множеств
-	Node* intersectionOfSets(Node* a);
+	SetClass* intersectionOfSets(SetClass* a);
 
 	//разность двух множеств a-b
-	Node* subtraction(Node* a);
+	SetClass* subtraction(SetClass* a);
 
 	//симметричная разность двух множеств
-	Node* simmetricSubtraction(Node* a);
+	SetClass* simmetricSubtraction(SetClass* a);
 };
