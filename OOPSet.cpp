@@ -40,30 +40,31 @@ void SetClass::setAddFirst(int num)
     firstNode = newStart;
 }
 
-SetClass::SetClass(int length, int min, int max, string type)
+SetClass* SetClass::createRandomSet(int length, int min, int max, string type)
 {
-    firstNode = nullptr;
+    SetClass* rezult = new SetClass();
     if (length <= 0 || max - min < length) {
-        return;
+        return nullptr;
     }
     if (type == "b") {
         for (int i = 0; i < length; i++) {
             int newNum = rand() % (max - min + 1) + min;
-            while (setContains(newNum) || newNum % 10 <= 3) {
+            while (rezult->setContains(newNum) || newNum % 10 <= 3) {
                 newNum = rand() % (max - min + 1) + min;
             }
-            setAddFirst(newNum);
+            rezult->setAddFirst(newNum);
         }
     }
     if (type == "a") {
         for (int i = 0; i < length; i++) {
             int newNum = rand() % (max - min + 1) + min;
-            while (setContains(newNum) || newNum % 10 >= 8) {
+            while (rezult->setContains(newNum) || newNum % 10 >= 8) {
                 newNum = rand() % (max - min + 1) + min;
             }
-            setAddFirst(newNum);
+            rezult->setAddFirst(newNum);
         }
     }
+    return rezult;
 }
 
 int SetClass::powerOfSet()
@@ -110,42 +111,72 @@ SetClass::~SetClass()
     firstNode = nullptr;
 }
 
-bool SetClass::subSet(SetClass a)
+bool SetClass::subSet(SetClass* a)
 {
     if (setisEmpty()) return true;
-    if (a.setisEmpty()) return false;
+    if (a->setisEmpty()) return false;
     int sizea = powerOfSet();
-    if (sizea > a.powerOfSet()) return false;
+    if (sizea > a->powerOfSet()) return false;
     int check = 0;
     Node* tmpa = firstNode;
-    while (tmpa != NULL) {
-        if (!a.setContains(tmpa->value))return false;
+    while (tmpa != nullptr) {
+        if (!a->setContains(tmpa->value))return false;
         tmpa = tmpa->next;
     }
     return true;
 }
 
-bool SetClass::equalitySet(SetClass a)
+bool SetClass::equalitySet(SetClass* a)
 {
-    return (subSet(a) && a.subSet(this));
+    return (subSet(a) && a->subSet(this));
 }
 
-Node* SetClass::CombiningSets(Node* a)
+SetClass* SetClass::CombiningSets(SetClass* a)
 {
-    return nullptr;
+    if (this->setisEmpty() || a->setisEmpty()) return nullptr;
+    Node* tmp = this->firstNode;
+    SetClass* rezult = new SetClass();
+    while (tmp != nullptr)
+    {
+        rezult->setAddFirst(tmp->value);
+        tmp = tmp->next;
+    }
+    tmp = a->firstNode;
+    while (tmp != nullptr)
+    {
+        rezult->setAddFirst(tmp->value);
+        tmp = tmp->next;
+    }
+    return rezult;
 }
 
-Node* SetClass::intersectionOfSets(Node* a)
+SetClass* SetClass::intersectionOfSets(SetClass* a)
 {
-    return nullptr;
+    if (this->setisEmpty() || a->setisEmpty()) return nullptr;
+    SetClass* rezult = new SetClass();
+    Node* tmpa = this->firstNode;
+    while (tmpa != nullptr)
+    {
+        if (a->setContains( tmpa->value)) rezult->setAddFirst( tmpa->value);
+        tmpa = tmpa->next;
+    }
+    return rezult;
 }
 
-Node* SetClass::subtraction(Node* a)
+SetClass* SetClass::subtraction(SetClass* a)
 {
-    return nullptr;
+    if (this->setisEmpty() || a->setisEmpty()) return nullptr;
+    SetClass* rezult = new SetClass();
+    Node* tmpa = this->firstNode;
+    while (tmpa != nullptr)
+    {
+        if (!a->setContains(tmpa->value)) rezult->setAddFirst(tmpa->value);
+        tmpa = tmpa->next;
+    }
+    return rezult;
 }
 
-Node* SetClass::simmetricSubtraction(Node* a)
+SetClass* SetClass::simmetricSubtraction(SetClass* a)
 {
-    return nullptr;
+    return this->CombiningSets(a)->subtraction(this->intersectionOfSets(a));
 }
